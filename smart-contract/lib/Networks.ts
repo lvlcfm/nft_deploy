@@ -34,26 +34,3 @@ export const ethereumMainnet: NetworkConfigInterface = {
       `https://etherscan.io/address/${contractAddress}`,
   },
 };
-
-/*
- * Polygon
- */
-export const polygonTestnet: NetworkConfigInterface = {
-  chainId: 80001,
-  symbol: "MATIC (test)",
-  blockExplorer: {
-    name: "Polygonscan (Mumbai)",
-    generateContractUrl: (contractAddress: string) =>
-      `https://mumbai.polygonscan.com/address/${contractAddress}`,
-  },
-};
-
-export const polygonMainnet: NetworkConfigInterface = {
-  chainId: 137,
-  symbol: "MATIC",
-  blockExplorer: {
-    name: "Polygonscan",
-    generateContractUrl: (contractAddress: string) =>
-      `https://polygonscan.com/address/${contractAddress}`,
-  },
-};

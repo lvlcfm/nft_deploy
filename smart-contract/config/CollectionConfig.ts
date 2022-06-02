@@ -5,9 +5,6 @@ import * as Marketplaces from "../lib/Marketplaces";
 const CollectionConfig: CollectionConfigInterface = {
   testnet: Networks.ethereumTestnet,
   mainnet: Networks.ethereumMainnet,
-  // The contract name can be updated using the following command:
-  // yarn rename-contract NEW_CONTRACT_NAME
-  // Please DO NOT change it manually!
   contractName: "MyToken44",
   tokenName: "My Token 44",
   tokenSymbol: "MTFF",
@@ -24,7 +21,7 @@ const CollectionConfig: CollectionConfigInterface = {
   contractAddress: null,
   marketplaceIdentifier: "my-token-44",
   marketplaceConfig: Marketplaces.openSea,
-  artistAddress: "0x92F5148a053058AE74A614B30B317748f071B8DC",
+  artistAddress: "0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
   royaltyFee: 700,
 };
 

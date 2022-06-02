@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -14,7 +13,6 @@ contract MyToken44 is
     ERC721,
     ERC721Royalty,
     ERC721Enumerable,
-    ERC721URIStorage,
     Pausable,
     Ownable,
     ReentrancyGuard
@@ -48,7 +46,8 @@ contract MyToken44 is
         maxSupply = _maxSupply;
         setMaxMintAmountPerTx(_maxMintAmountPerTx);
         setHiddenMetadataUri(_hiddenMetadataUri);
-        _setDefaultRoyalty(_artist, _royaltyFee);
+        setDefaultRoyalty(_artist, _royaltyFee);
+        pause();
     }
 
     function setDefaultRoyalty(address _receiver, uint96 _feeNumerator)
@@ -70,7 +69,7 @@ contract MyToken44 is
         public
         view
         virtual
-        override(ERC721, ERC721URIStorage)
+        override
         returns (string memory)
     {
         require(
@@ -119,7 +118,23 @@ contract MyToken44 is
         mintPriceCompliance(_mintAmount)
     {
         require(!paused(), "The contract is paused!");
-        _safeMint(_msgSender(), _mintAmount);
+        for (uint256 i = 0; i < _mintAmount; i++) {
+            uint256 tokenId = _tokenIdCounter.current();
+            _tokenIdCounter.increment();
+            _safeMint(_msgSender(), tokenId);
+        }
+    }
+
+    function mintForAddress(uint256 _mintAmount, address _receiver)
+        public
+        mintCompliance(_mintAmount)
+        onlyOwner
+    {
+        for (uint256 i = 0; i < _mintAmount; i++) {
+            uint256 tokenId = _tokenIdCounter.current();
+            _tokenIdCounter.increment();
+            _safeMint(_receiver, tokenId);
+        }
     }
 
     function setRevealed(bool _state) public onlyOwner {
@@ -169,13 +184,6 @@ contract MyToken44 is
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
-    }
-
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -186,10 +194,7 @@ contract MyToken44 is
 
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721, ERC721URIStorage, ERC721Royalty)
-    {
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721Royalty) {
         super._burn(tokenId);
     }
 

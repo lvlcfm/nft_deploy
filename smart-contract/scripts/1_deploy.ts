@@ -1,3 +1,8 @@
+// We require the Hardhat Runtime Environment explicitly here. This is optional
+// but useful for running the script in a standalone fashion through `node <script>`.
+//
+// When running the script with `npx hardhat run <script>` you'll find the Hardhat
+// Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
 import CollectionConfig from "../config/CollectionConfig";
 import { NftContractType } from "../lib/NftContractProvider";
@@ -14,7 +19,9 @@ async function main() {
   console.log("Deploying contract...");
 
   // We get the contract to deploy
-  const Contract = await ethers.getContractFactory("MyToken44");
+  const Contract = await ethers.getContractFactory(
+    CollectionConfig.contractName
+  );
   const contract = (await Contract.deploy(
     ...ContractArguments
   )) as NftContractType;
